@@ -16,7 +16,7 @@ def is_year_included(value: str) -> bool:
         return False
 
 with open("../certs.txt") as fp, open('results.csv',"w") as f:
-    f.write('ClientID, Alias, Subject, E, CN, OU, O, L, ST, C, Issuer\n')
+    f.write('ClientID, Alias, Subject, E, CN, OU, O, L, ST, C, Issuer, Month, Year\n')
     for line in fp:
         alias = regex_alias.match(line)
         subject = regex_subject.match(line)
@@ -67,6 +67,11 @@ with open("../certs.txt") as fp, open('results.csv',"w") as f:
         if issuer:
             f.write('"' + issuer.group("issuer").replace('"', '""') + '"')
         if time:
-
+            data = json.dumps(dict(time))
+            time_json = json.loads(data)
+            if 'month' in time_json:
+                f.write(time_json['month'] + ',')
+            if 'year' in time_json:
+                f.write(time_json['year'] + ',')
         if end:
             f.write('\n')
