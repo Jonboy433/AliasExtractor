@@ -6,6 +6,7 @@ regex_subject = re.compile('Subject: (?P<subject>.*)', re.IGNORECASE)
 regex_issuer = re.compile('Issuer: (?P<issuer>.*)', re.IGNORECASE)
 regex_ldap = re.compile('(E|CN|OU|O|L|ST|C)=(?P<value>[^,]*)', re.IGNORECASE)
 regex_end = re.compile('^\\*', re.IGNORECASE)
+regex_time = re.compile('(?i).*until: (?P<date>[a-z]{3}) (?P<month>[a-z]{3}) (?P<dayMonth>[0-9]{2}) (?P<time>[0-9]{2}:[0-9]{2}:[0-9]{2}).*(?P<year>[0-9]{4})',re.IGNORECASE)
 
 def is_year_included(value: str) -> bool:
     try:
@@ -22,6 +23,7 @@ with open("../certs.txt") as fp, open('results.csv',"w") as f:
         issuer = regex_issuer.match(line)
         ldap = regex_ldap.findall(line)
         end = regex_end.match(line)
+        time = regex_time.findall(line)
         if alias:
             if is_year_included(alias.group("alias")):
                 f.write(alias.group("alias")[:-4] + ',')
@@ -64,5 +66,7 @@ with open("../certs.txt") as fp, open('results.csv',"w") as f:
                     f.write(',')
         if issuer:
             f.write('"' + issuer.group("issuer").replace('"', '""') + '"')
+        if time:
+
         if end:
             f.write('\n')
