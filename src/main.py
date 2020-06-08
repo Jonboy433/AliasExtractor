@@ -65,13 +65,9 @@ with open("../certs.txt") as fp, open('results.csv',"w") as f:
                 else:
                     f.write(',')
         if issuer:
-            f.write('"' + issuer.group("issuer").replace('"', '""') + '"')
+            f.write('"' + issuer.group("issuer").replace('"', '""') + '"' + ',')
         if time:
-            data = json.dumps(dict(time))
-            time_json = json.loads(data)
-            if 'month' in time_json:
-                f.write(time_json['month'] + ',')
-            if 'year' in time_json:
-                f.write(time_json['year'] + ',')
+            f.write(time[0][1] + ',')
+            f.write(time[0][4])
         if end:
             f.write('\n')
